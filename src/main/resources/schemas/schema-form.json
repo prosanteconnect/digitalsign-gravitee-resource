@@ -3,32 +3,32 @@
   "id" : "urn:jsonschema:fr:ans:psc:DigitalSignResourceConfiguration",
   "properties" : {
     "digitalSignatureServerUrl": {
-      "title": "",
-      "description": "",
+      "title": "Digital Signature Server URL",
+      "description": "URL du serveur de signature",
       "type" : "string",
       "default": "https://authorization_server"
     },
     "digitalSigningEndpoint" : {
-      "title": "",
-      "description": "Path which is used to introspect an incoming access token (must start with '/').",
+      "title": "Signature endpoint",
+      "description": "Endpoint de signature (doit commencer par '/').",
       "type" : "string",
       "default": "/sign/xmldsig"
     },
     "useSystemProxy" : {
       "title": "System proxy",
-      "description": "Use system proxy",
+      "description": "Utiliser le system proxy",
       "type" : "boolean",
       "default": false
     },
     "signingConfigId" : {
-      "title": "",
-      "description": "",
+      "title": "Signing Config Id",
+      "description": "Id de la configuration du serveur de signature utilisée",
       "type" : "string",
       "default": "1"
     },
     "clientSecret" : {
-      "title": "",
-      "description": "",
+      "title": "client Secret",
+      "description": "Secret requis pour l'accès au serveur de signature",
       "type": "string",
       "default": " "
     }
