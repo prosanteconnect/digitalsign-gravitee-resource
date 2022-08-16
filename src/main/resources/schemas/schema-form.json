@@ -1,0 +1,42 @@
+{
+  "type" : "object",
+  "id" : "urn:jsonschema:fr:ans:psc:DigitalSignResourceConfiguration",
+  "properties" : {
+    "digitalSignatureServerUrl": {
+      "title": "",
+      "description": "",
+      "type" : "string",
+      "default": "https://authorization_server"
+    },
+    "digitalSigningEndpoint" : {
+      "title": "",
+      "description": "Path which is used to introspect an incoming access token (must start with '/').",
+      "type" : "string",
+      "default": "/sign/xmldsig"
+    },
+    "useSystemProxy" : {
+      "title": "System proxy",
+      "description": "Use system proxy",
+      "type" : "boolean",
+      "default": false
+    },
+    "signingConfigId" : {
+      "title": "",
+      "description": "",
+      "type" : "string",
+      "default": "1"
+    },
+    "clientSecret" : {
+      "title": "",
+      "description": "",
+      "type": "string",
+      "default": " "
+    }
+  },
+  "required": [
+    "digitalSignatureServerUrl",
+    "digitalSigningEndpoint",
+    "signingConfigId",
+    "clientSecret"
+  ]
+}
