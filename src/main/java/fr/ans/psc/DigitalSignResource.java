@@ -9,9 +9,13 @@ import io.gravitee.node.api.utils.NodeUtils;
 import io.gravitee.node.container.spring.SpringEnvironmentConfiguration;
 import io.gravitee.resource.api.AbstractConfigurableResource;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.*;
 import io.gravitee.common.util.VertxProxyOptionsUtils;
+import io.vertx.ext.web.client.WebClient;
+import io.vertx.ext.web.multipart.MultipartForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -98,18 +102,23 @@ public class DigitalSignResource extends AbstractConfigurableResource<DigitalSig
                 });
     }
 
-    public void signWithXmldsig(File docToSign, Handler<DigitalSignResponse> responseHandler) {
+    public void signWithXmldsig(byte[] docToSign, Handler<DigitalSignResponse> responseHandler) {
         HttpClient httpClient = httpClients.computeIfAbsent(Thread.currentThread(), context -> vertx.createHttpClient(httpClientOptions));
+        WebClient webClient = WebClient.wrap(httpClient);
 
-        final RequestOptions reqOptions = new RequestOptions()
-                .setMethod(HttpMethod.POST)
-                .setAbsoluteURI(signingEndpointURI)
-                .setTimeout(30000L)
-                .putHeader(HttpHeaders.USER_AGENT, userAgent);
+        Buffer buffer = Buffer.buffer(docToSign);
+        MultipartForm form = MultipartForm.create()
+                .attribute("idSignConf", configuration().getSigningConfigId())
+                .binaryFileUpload(
+                        "file",
+                        "file",
+                        buffer,
+                        MediaType.MEDIA_APPLICATION_OCTET_STREAM.toMediaString());
 
-        reqOptions.putHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
-
-        httpClient.request(reqOptions)
+        webClient.post(signingEndpointURI)
+                .putHeader("content-type", "multipart/form-data")
+                .putHeader("Accept", "application/json")
+                .sendMultipartForm(form)
                 .onFailure(new io.vertx.core.Handler<Throwable>() {
                     @Override
                     public void handle(Throwable event) {
@@ -117,49 +126,57 @@ public class DigitalSignResource extends AbstractConfigurableResource<DigitalSig
                         responseHandler.handle(new DigitalSignResponse(false, event.getMessage()));
                     }
                 })
-                .onSuccess(
-                        new io.vertx.core.Handler<HttpClientRequest>() {
-                            @Override
-                            public void handle(HttpClientRequest request) {
-                                request
-                                        .response(
-                                                new io.vertx.core.Handler<AsyncResult<HttpClientResponse>>() {
-                                                    @Override
-                                                    public void handle(AsyncResult<HttpClientResponse> asyncResponse) {
-                                                        if (asyncResponse.failed()) {
-                                                            logger.error("An error occurs while submitting document to signature server", asyncResponse.cause());
-                                                            responseHandler.handle(new DigitalSignResponse(false, asyncResponse.cause().getMessage()));
-                                                        } else {
-                                                            final HttpClientResponse response = asyncResponse.result();
-                                                            response.bodyHandler(buffer -> {
-                                                                logger.debug(
-                                                                        "Digital signature server returns a response with a {} status code",
-                                                                        response.statusCode()
-                                                                );
-                                                                if (response.statusCode() == HttpStatusCode.OK_200) {
-                                                                    String content = buffer.toString();
-                                                                    responseHandler.handle(new DigitalSignResponse(true, content));
-                                                                } else {
-                                                                    responseHandler.handle(new DigitalSignResponse(false, buffer.toString()));
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-                                                }
-                                        )
-                                        .exceptionHandler(
-                                                new io.vertx.core.Handler<Throwable>() {
-                                                    @Override
-                                                    public void handle(Throwable event) {
-                                                        logger.error("An error occurs while submitting document to signature server", event);
-                                                        responseHandler.handle(new DigitalSignResponse(false, event.getMessage()));
-                                                    }
-                                                }
-                                        );
-                                request.end();
-                            }
-                        }
-                );
+                .onSuccess(bufferHttpResponse -> {
+                    if (bufferHttpResponse.statusCode() == HttpStatusCode.OK_200) {
+                        //TODO log.info
+                        responseHandler.handle(new DigitalSignResponse(true, bufferHttpResponse.bodyAsString()));
+                    } else {
+                        //TODO log.error
+                        responseHandler.handle(new DigitalSignResponse(false, bufferHttpResponse.bodyAsString()));
+                    }
+                });
+//                        new io.vertx.core.Handler<HttpClientRequest>() {
+//                            @Override
+//                            public void handle(HttpClientRequest request) {
+//                                request
+//                                        .response(
+//                                                new io.vertx.core.Handler<AsyncResult<HttpClientResponse>>() {
+//                                                    @Override
+//                                                    public void handle(AsyncResult<HttpClientResponse> asyncResponse) {
+//                                                        if (asyncResponse.failed()) {
+//                                                            logger.error("An error occurs while submitting document to signature server", asyncResponse.cause());
+//                                                            responseHandler.handle(new DigitalSignResponse(false, asyncResponse.cause().getMessage()));
+//                                                        } else {
+//                                                            final HttpClientResponse response = asyncResponse.result();
+//                                                            response.bodyHandler(buffer -> {
+//                                                                logger.debug(
+//                                                                        "Digital signature server returns a response with a {} status code",
+//                                                                        response.statusCode()
+//                                                                );
+//                                                                if (response.statusCode() == HttpStatusCode.OK_200) {
+//                                                                    String content = buffer.toString();
+//                                                                    responseHandler.handle(new DigitalSignResponse(true, content));
+//                                                                } else {
+//                                                                    responseHandler.handle(new DigitalSignResponse(false, buffer.toString()));
+//                                                                }
+//                                                            });
+//                                                        }
+//                                                    }
+//                                                }
+//                                        )
+//                                        .exceptionHandler(
+//                                                new io.vertx.core.Handler<Throwable>() {
+//                                                    @Override
+//                                                    public void handle(Throwable event) {
+//                                                        logger.error("An error occurs while submitting document to signature server", event);
+//                                                        responseHandler.handle(new DigitalSignResponse(false, event.getMessage()));
+//                                                    }
+//                                                }
+//                                        );
+//                                request.end();
+//                            }
+//                        }
+//                );
 
     }
 
