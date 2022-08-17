@@ -75,7 +75,7 @@
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
             <version>4.1.0</version>
-<!--            <scope>provided</scope>-->
+            <scope>provided</scope>
         </dependency>
 
         <!-- Test scope -->
