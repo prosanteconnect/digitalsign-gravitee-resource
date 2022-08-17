@@ -16,6 +16,7 @@
         <gravitee-gateway-api.version>1.31.1</gravitee-gateway-api.version>
         <gravitee-node.version>1.23.0</gravitee-node.version>
         <gravitee-policy-api.version>1.11.0</gravitee-policy-api.version>
+        <vertx-client.version>4.2.6</vertx-client.version>
 
         <junit.version>4.12</junit.version>
 
@@ -74,16 +75,14 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
-            <version>4.1.0</version>
+            <version>${vertx-client.version}</version>
             <scope>provided</scope>
         </dependency>
-
-
 
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web-client</artifactId>
-            <version>4.1.0</version>
+            <version>${vertx-client.version}</version>
             <scope>provided</scope>
         </dependency>
 
