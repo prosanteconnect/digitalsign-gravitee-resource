@@ -12,7 +12,7 @@
       "title": "Signature endpoint",
       "description": "Endpoint de signature (doit commencer par '/').",
       "type" : "string",
-      "default": "/sign/xmldsig"
+      "default": "/signatures/xmldsig"
     },
     "useSystemProxy" : {
       "title": "System proxy",
