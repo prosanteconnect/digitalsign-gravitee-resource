@@ -14,6 +14,8 @@ public class DigitalSignResourceConfiguration implements ResourceConfiguration {
 
     private String clientSecret;
 
+    private boolean useSSL;
+
     public String getDigitalSignatureServerUrl() {
         return digitalSignatureServerUrl;
     }
@@ -52,5 +54,13 @@ public class DigitalSignResourceConfiguration implements ResourceConfiguration {
 
     public void setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
+    }
+
+    public boolean isUseSSL() {
+        return useSSL;
+    }
+
+    public void setUseSSL(boolean useSSL) {
+        this.useSSL = useSSL;
     }
 }

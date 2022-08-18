@@ -20,6 +20,12 @@
       "type" : "boolean",
       "default": false
     },
+    "useSSL" : {
+      "title": "Use SSL",
+      "description": "Utiliser TLS",
+      "type" : "boolean",
+      "default": false
+    },
     "signingConfigId" : {
       "title": "Signing Config Id",
       "description": "Id de la configuration du serveur de signature utilisée",

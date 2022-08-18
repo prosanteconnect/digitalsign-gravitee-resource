@@ -22,7 +22,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import java.io.File;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,7 +67,7 @@ public class DigitalSignResource extends AbstractConfigurableResource<DigitalSig
                 .setDefaultPort(dgsPort)
                 .setIdleTimeout(60)
                 .setConnectTimeout(10000)
-                .setSsl(true).setVerifyHost(false).setTrustAll(true);
+                .setSsl(configuration().isUseSSL()).setVerifyHost(false).setTrustAll(true);
 
         if (configuration().isUseSystemProxy()) {
             try {
