@@ -8,8 +8,6 @@ import io.gravitee.node.api.configuration.Configuration;
 import io.gravitee.node.api.utils.NodeUtils;
 import io.gravitee.node.container.spring.SpringEnvironmentConfiguration;
 import io.gravitee.resource.api.AbstractConfigurableResource;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.*;
