@@ -87,6 +87,9 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 
         userAgent = NodeUtils.userAgent(applicationContext.getBean(Node.class));
         vertx = applicationContext.getBean(Vertx.class);
+
+        //TODO rm debug log
+        System.out.println("End of signing resource doStart method");
     }
 
     @Override
