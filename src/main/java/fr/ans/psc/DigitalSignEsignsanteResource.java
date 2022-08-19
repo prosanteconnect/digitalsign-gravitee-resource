@@ -57,6 +57,7 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 
         URI serverUrl = URI.create(configuration().getDigitalSignatureServerUrl());
         String dgsHost = serverUrl.getHost();
+        System.out.println(serverUrl.getPort());
         int dgsPort = serverUrl.getPort() == -1 ? serverUrl.getPort() : 80;
 
         if (configuration().getDigitalSignatureServerUrl() != null) {
