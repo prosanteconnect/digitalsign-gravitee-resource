@@ -7,7 +7,6 @@ import io.gravitee.node.api.Node;
 import io.gravitee.node.api.configuration.Configuration;
 import io.gravitee.node.api.utils.NodeUtils;
 import io.gravitee.node.container.spring.SpringEnvironmentConfiguration;
-import io.gravitee.resource.api.AbstractConfigurableResource;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.*;
@@ -25,9 +24,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-public class DigitalSignResource extends AbstractConfigurableResource<DigitalSignResourceConfiguration> implements ApplicationContextAware {
+public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSignResourceConfiguration> implements ApplicationContextAware {
 
-    private final Logger logger = LoggerFactory.getLogger(DigitalSignResource.class);
+    private final Logger logger = LoggerFactory.getLogger(DigitalSignEsignsanteResource.class);
 
     // Pattern reuse for duplicate slash removal
     private static final Pattern DUPLICATE_SLASH_REMOVER = Pattern.compile("(?<!(http:|https:))[//]+");
