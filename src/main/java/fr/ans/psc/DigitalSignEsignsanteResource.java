@@ -46,6 +46,9 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 
     @Override
     public void doStart() throws Exception {
+        //TODO rm debug log
+        System.out.println("in doStart method");
+
         super.doStart();
 
         logger.info("Starting a digital signing resource using server at {}", configuration().getDigitalSignatureServerUrl());
