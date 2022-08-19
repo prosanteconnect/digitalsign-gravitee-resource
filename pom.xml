@@ -75,7 +75,7 @@
             <groupId>fr.ans.psc</groupId>
             <artifactId>digital-sign-resource-api</artifactId>
             <version>1.0-SNAPSHOT</version>
-<!--            <scope>provided</scope>-->
+            <scope>provided</scope>
         </dependency>
 
         <!-- HTTP client -->
