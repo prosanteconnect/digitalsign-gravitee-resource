@@ -118,6 +118,7 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
         Buffer buffer = Buffer.buffer(docToSign);
         MultipartForm form = MultipartForm.create()
                 .attribute("idSignConf", configuration().getSigningConfigId())
+                .attribute("secret", configuration().getClientSecret())
                 .binaryFileUpload(
                         "file",
                         "file",
