@@ -57,7 +57,7 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 
         URI serverUrl = URI.create(configuration().getDigitalSignatureServerUrl());
         String dgsHost = serverUrl.getHost();
-        int dgsPort = serverUrl.getPort() == -1 ? serverUrl.getPort() : 443;
+        int dgsPort = serverUrl.getPort() == -1 ? serverUrl.getPort() : 80;
 
         if (configuration().getDigitalSignatureServerUrl() != null) {
             signingEndpointURI = DUPLICATE_SLASH_REMOVER
