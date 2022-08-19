@@ -155,49 +155,6 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
                         responseHandler.handle(new DigitalSignResponse(false, bufferHttpResponse.bodyAsString()));
                     }
                 });
-//                        new io.vertx.core.Handler<HttpClientRequest>() {
-//                            @Override
-//                            public void handle(HttpClientRequest request) {
-//                                request
-//                                        .response(
-//                                                new io.vertx.core.Handler<AsyncResult<HttpClientResponse>>() {
-//                                                    @Override
-//                                                    public void handle(AsyncResult<HttpClientResponse> asyncResponse) {
-//                                                        if (asyncResponse.failed()) {
-//                                                            logger.error("An error occurs while submitting document to signature server", asyncResponse.cause());
-//                                                            responseHandler.handle(new DigitalSignResponse(false, asyncResponse.cause().getMessage()));
-//                                                        } else {
-//                                                            final HttpClientResponse response = asyncResponse.result();
-//                                                            response.bodyHandler(buffer -> {
-//                                                                logger.debug(
-//                                                                        "Digital signature server returns a response with a {} status code",
-//                                                                        response.statusCode()
-//                                                                );
-//                                                                if (response.statusCode() == HttpStatusCode.OK_200) {
-//                                                                    String content = buffer.toString();
-//                                                                    responseHandler.handle(new DigitalSignResponse(true, content));
-//                                                                } else {
-//                                                                    responseHandler.handle(new DigitalSignResponse(false, buffer.toString()));
-//                                                                }
-//                                                            });
-//                                                        }
-//                                                    }
-//                                                }
-//                                        )
-//                                        .exceptionHandler(
-//                                                new io.vertx.core.Handler<Throwable>() {
-//                                                    @Override
-//                                                    public void handle(Throwable event) {
-//                                                        logger.error("An error occurs while submitting document to signature server", event);
-//                                                        responseHandler.handle(new DigitalSignResponse(false, event.getMessage()));
-//                                                    }
-//                                                }
-//                                        );
-//                                request.end();
-//                            }
-//                        }
-//                );
-
     }
 
     @Override
