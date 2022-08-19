@@ -149,7 +149,7 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
                     } else {
                         //TODO log.error
                         //TODO rm debug log
-                        System.out.println("success ! " + bufferHttpResponse.bodyAsString());
+                        System.out.println("failed ! " + bufferHttpResponse.bodyAsString());
                         responseHandler.handle(new DigitalSignResponse(false, bufferHttpResponse.bodyAsString()));
                     }
                 });
