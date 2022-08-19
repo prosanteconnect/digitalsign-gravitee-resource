@@ -125,6 +125,7 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 
         //TODO rm debug log
         System.out.println("before client call");
+        System.out.println(signingEndpointURI);
 
         webClient.post(signingEndpointURI)
                 .putHeader("content-type", "multipart/form-data")
