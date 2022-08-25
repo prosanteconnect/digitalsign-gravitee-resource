@@ -36,6 +36,18 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 
     private final int HTTPS_PORT = 443;
 
+    private final String ID_SIGN_CONF_KEY = "idSignConf";
+
+    private final String SIGN_SECRET_KEY = "secret";
+
+    private final String CONTENT_TYPE_HEADER = "content-type";
+
+    private final String MULTIPART_FORM_HEADER = "multipart/form-data";
+
+    private final String ACCEPT_HEADER = "Accept";
+
+    private final String JSON_HEADER = "application/json";
+
     private ApplicationContext applicationContext;
 
     private HttpClientOptions httpClientOptions;
@@ -110,8 +122,8 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 
         Buffer buffer = Buffer.buffer(docToSign);
         MultipartForm form = MultipartForm.create()
-                .attribute("idSignConf", configuration().getSigningConfigId())
-                .attribute("secret", configuration().getClientSecret())
+                .attribute(ID_SIGN_CONF_KEY, configuration().getSigningConfigId())
+                .attribute(SIGN_SECRET_KEY, configuration().getClientSecret())
                 .binaryFileUpload(
                         "file",
                         "file",
@@ -119,8 +131,8 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
                         MediaType.MEDIA_APPLICATION_OCTET_STREAM.toMediaString());
 
         webClient.post(signingEndpointURI)
-                .putHeader("content-type", "multipart/form-data")
-                .putHeader("Accept", "application/json")
+                .putHeader(CONTENT_TYPE_HEADER, MULTIPART_FORM_HEADER)
+                .putHeader(ACCEPT_HEADER, JSON_HEADER)
                 .sendMultipartForm(form)
                 .onFailure(new io.vertx.core.Handler<Throwable>() {
                     @Override
