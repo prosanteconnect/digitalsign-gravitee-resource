@@ -134,20 +134,17 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
                 .putHeader(CONTENT_TYPE_HEADER, MULTIPART_FORM_HEADER)
                 .putHeader(ACCEPT_HEADER, JSON_HEADER)
                 .sendMultipartForm(form)
-                .onFailure(new io.vertx.core.Handler<Throwable>() {
-                    @Override
-                    public void handle(Throwable event) {
-                        logger.error("Could not send document do signature server", event);
-                        responseHandler.handle(new DigitalSignResponse(false, event.getMessage()));
-                    }
+                .onFailure(failure -> {
+                    logger.error("Could not send document do signature server", failure);
+                    responseHandler.handle(new DigitalSignResponse(false, failure.getMessage()));
                 })
-                .onSuccess(bufferHttpResponse -> {
-                    if (bufferHttpResponse.statusCode() == HttpStatusCode.OK_200) {
+                .onSuccess(response -> {
+                    if (response.statusCode() == HttpStatusCode.OK_200) {
                         logger.info("document succesfully signed");
-                        responseHandler.handle(new DigitalSignResponse(true, bufferHttpResponse.bodyAsString()));
+                        responseHandler.handle(new DigitalSignResponse(true, response.bodyAsString()));
                     } else {
-                        logger.error("signing document failed");
-                        responseHandler.handle(new DigitalSignResponse(false, bufferHttpResponse.bodyAsString()));
+                        logger.error("signing request rejected by Signature server");
+                        responseHandler.handle(new DigitalSignResponse(false, response.bodyAsString()));
                     }
                 });
     }
