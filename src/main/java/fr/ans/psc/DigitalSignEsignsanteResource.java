@@ -32,6 +32,10 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
     // Pattern reuse for duplicate slash removal
     private static final Pattern DUPLICATE_SLASH_REMOVER = Pattern.compile("(?<!(http:|https:))[//]+");
 
+    private final int HTTP_PORT = 80;
+
+    private final int HTTPS_PORT = 443;
+
     private ApplicationContext applicationContext;
 
     private HttpClientOptions httpClientOptions;
@@ -46,9 +50,6 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 
     @Override
     public void doStart() throws Exception {
-        //TODO rm debug log
-        System.out.println("in doStart method");
-
         super.doStart();
 
         logger.info("Starting a digital signing resource using server at {}", configuration().getDigitalSignatureServerUrl());
@@ -57,8 +58,7 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 
         URI serverUrl = URI.create(configuration().getDigitalSignatureServerUrl());
         String dgsHost = serverUrl.getHost();
-        System.out.println(serverUrl.getPort());
-        int dgsPort = serverUrl.getPort() == -1 ? serverUrl.getPort() : 80;
+        int dgsPort = serverUrl.getPort() != -1 ? serverUrl.getPort() : configuration().isUseSSL() ? HTTPS_PORT : HTTP_PORT;
 
         if (configuration().getDigitalSignatureServerUrl() != null) {
             signingEndpointURI = DUPLICATE_SLASH_REMOVER
