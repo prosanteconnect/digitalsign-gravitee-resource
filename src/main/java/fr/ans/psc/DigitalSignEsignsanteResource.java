@@ -53,8 +53,6 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
         super.doStart();
 
         logger.info("Starting a digital signing resource using server at {}", configuration().getDigitalSignatureServerUrl());
-        //TODO rm debug log
-        System.out.println("Starting a digital signing resource using server at " + configuration().getDigitalSignatureServerUrl());
 
         URI serverUrl = URI.create(configuration().getDigitalSignatureServerUrl());
         String dgsHost = serverUrl.getHost();
@@ -88,9 +86,6 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 
         userAgent = NodeUtils.userAgent(applicationContext.getBean(Node.class));
         vertx = applicationContext.getBean(Vertx.class);
-
-        //TODO rm debug log
-        System.out.println("End of signing resource doStart method");
     }
 
     @Override
@@ -109,10 +104,8 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
     }
 
     public void signWithXmldsig(byte[] docToSign, Handler<DigitalSignResponse> responseHandler) {
-        //TODO rm debug log
-        System.out.println("in main sign method");
-
-        HttpClient httpClient = httpClients.computeIfAbsent(Thread.currentThread(), context -> vertx.createHttpClient(httpClientOptions));
+        HttpClient httpClient = httpClients.computeIfAbsent(Thread.currentThread(),
+                context -> vertx.createHttpClient(httpClientOptions));
         WebClient webClient = WebClient.wrap(httpClient);
 
         Buffer buffer = Buffer.buffer(docToSign);
@@ -125,10 +118,6 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
                         buffer,
                         MediaType.MEDIA_APPLICATION_OCTET_STREAM.toMediaString());
 
-        //TODO rm debug log
-        System.out.println("before client call");
-        System.out.println(signingEndpointURI);
-
         webClient.post(signingEndpointURI)
                 .putHeader("content-type", "multipart/form-data")
                 .putHeader("Accept", "application/json")
@@ -136,22 +125,16 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
                 .onFailure(new io.vertx.core.Handler<Throwable>() {
                     @Override
                     public void handle(Throwable event) {
-                        logger.error("An error occurs while submitting document to signature server", event);
-                        //TODO rm debug log
-                        System.out.println("An error occurs while submitting document to signature server " + Arrays.toString(event.getStackTrace()));
+                        logger.error("Could not send document do signature server", event);
                         responseHandler.handle(new DigitalSignResponse(false, event.getMessage()));
                     }
                 })
                 .onSuccess(bufferHttpResponse -> {
                     if (bufferHttpResponse.statusCode() == HttpStatusCode.OK_200) {
-                        //TODO log.info
-                        //TODO rm debug log
-                        System.out.println("success ! " + bufferHttpResponse.bodyAsString());
+                        logger.info("document succesfully signed");
                         responseHandler.handle(new DigitalSignResponse(true, bufferHttpResponse.bodyAsString()));
                     } else {
-                        //TODO log.error
-                        //TODO rm debug log
-                        System.out.println("failed ! " + bufferHttpResponse.bodyAsString());
+                        logger.error("signing document failed");
                         responseHandler.handle(new DigitalSignResponse(false, bufferHttpResponse.bodyAsString()));
                     }
                 });
