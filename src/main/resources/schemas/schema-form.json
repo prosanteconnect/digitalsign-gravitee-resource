@@ -36,13 +36,15 @@
       "title": "client Secret",
       "description": "Secret requis pour l'accès au serveur de signature",
       "type": "string",
-      "default": " "
+      "default": " ",
+      "x-schema-form": {
+        "type": "password"
+      }
     }
   },
   "required": [
     "digitalSignatureServerUrl",
     "digitalSigningEndpoint",
-    "signingConfigId",
-    "clientSecret"
+    "signingConfigId"
   ]
 }

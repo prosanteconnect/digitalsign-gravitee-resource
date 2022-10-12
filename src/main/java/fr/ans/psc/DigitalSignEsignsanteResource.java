@@ -21,6 +21,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
@@ -115,7 +116,7 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
                 });
     }
 
-    public void signWithXmldsig(byte[] docToSign, Handler<DigitalSignResponse> responseHandler) {
+    public void sign(byte[] docToSign, List<AdditionalParameter> additionalParameters, Handler<DigitalSignResponse> responseHandler) {
         HttpClient httpClient = httpClients.computeIfAbsent(Thread.currentThread(),
                 context -> vertx.createHttpClient(httpClientOptions));
         WebClient webClient = WebClient.wrap(httpClient);
@@ -129,6 +130,10 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
                         "file",
                         buffer,
                         MediaType.MEDIA_APPLICATION_OCTET_STREAM.toMediaString());
+
+        if (additionalParameters != null && !additionalParameters.isEmpty()) {
+            additionalParameters.forEach(param -> form.attribute(param.getName(), param.getValue()));
+        }
 
         webClient.post(signingEndpointURI)
                 .putHeader(CONTENT_TYPE_HEADER, MULTIPART_FORM_HEADER)
