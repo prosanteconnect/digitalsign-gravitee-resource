@@ -23,6 +23,7 @@ import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 import java.io.File;
@@ -153,17 +154,31 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
         DigitalSignResponse dsResponse;
 
         try {
-            String jsonResponse = webClient.post()
+//            String jsonResponse = webClient.post()
+//                    .accept(MediaType.APPLICATION_JSON)
+//                    .contentType(MediaType.MULTIPART_FORM_DATA)
+//                    .body(BodyInserters.fromMultipartData(mpBuilder.build()))
+//                    .retrieve()
+//                    .onStatus(HttpStatus::isError,
+//                            response -> response.bodyToMono(String.class).map(Exception::new))
+//                    .bodyToMono(String.class)
+//                    .block();
+
+//            dsResponse = new DigitalSignResponse(true, jsonResponse);
+
+            WebClient.ResponseSpec responseSpec = webClient.post()
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(BodyInserters.fromMultipartData(mpBuilder.build()))
-                    .retrieve()
-                    .onStatus(HttpStatus::isError,
-                            response -> response.bodyToMono(String.class).map(Exception::new))
-                    .bodyToMono(String.class)
-                    .block();
+                    .retrieve();
 
-            dsResponse = new DigitalSignResponse(true, jsonResponse);
+            WebClient.ResponseSpec afterReceive = responseSpec
+                    .onStatus(HttpStatus::isError,
+                            response -> response.bodyToMono(String.class).map(Exception::new));
+
+            Mono<String> mono = afterReceive.bodyToMono(String.class);
+            String jsonResp = mono.block();
+            dsResponse = new DigitalSignResponse(true, jsonResp);
         } catch (Exception e) {
             dsResponse = new DigitalSignResponse(false, e.getMessage());
         }
