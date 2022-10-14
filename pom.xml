@@ -6,7 +6,7 @@
 
     <groupId>fr.ans.psc</groupId>
     <artifactId>digitalsign-gravitee-resource</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <description>Digital Signature Server Resource for Gravitee API Management</description>
 
     <properties>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>fr.ans.psc</groupId>
             <artifactId>digital-sign-resource-api</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -85,6 +85,12 @@
             <artifactId>vertx-core</artifactId>
             <version>${vertx-client.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+            <version>2.6.4</version>
         </dependency>
 
         <dependency>
