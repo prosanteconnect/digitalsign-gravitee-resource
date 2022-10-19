@@ -176,7 +176,7 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 		}
 		ESignSanteSignatureReport report;
 		try {
-			report = api.signatureXMLdsig(configuration().getClientSecret(), Long.getLong(configuration().getSigningConfigId()), input);
+			report = api.signatureXMLdsig(configuration().getClientSecret(), Long.parseLong(configuration().getSigningConfigId()), input);
 		} catch (RestClientException e) {
 			return new DigitalSignResponse(e);
 		}
