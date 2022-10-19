@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.web.client.RestClientException;
 
 import com.google.gson.Gson;
 
@@ -163,17 +164,22 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 	@Override
 	public DigitalSignResponse sign(byte[] docToSign, List<AdditionalParameter> additionalParameters) {
 		ApiClient client = new ApiClient();
-		client.setBasePath(signingEndpointURI);
+		client.setBasePath(configuration().getDigitalSignatureServerUrl());
 		SignaturesApiControllerApi api = new SignaturesApiControllerApi(client);
 		File input = null;
 		try {
-			input = File.createTempFile("sign", "tmp");
+			input = File.createTempFile("sign", ".tmp");
 			Files.write(input.toPath(),docToSign);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error when writing file",e);
+			return new DigitalSignResponse(e);
 		}
-		ESignSanteSignatureReport report = api.signatureXMLdsig("password", 3L, input);
+		ESignSanteSignatureReport report;
+		try {
+			report = api.signatureXMLdsig(configuration().getClientSecret(), Long.getLong(configuration().getSigningConfigId()), input);
+		} catch (RestClientException e) {
+			return new DigitalSignResponse(e);
+		}
 		Gson gson = new Gson();
 		return new DigitalSignResponse(true, gson.toJson(report, ESignSanteSignatureReport.class));
 	}
