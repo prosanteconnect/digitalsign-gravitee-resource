@@ -6,8 +6,6 @@ public class DigitalSignResourceConfiguration implements ResourceConfiguration {
 
     private String digitalSignatureServerUrl;
 
-    private String digitalSigningEndpoint;
-
     private boolean useSystemProxy;
 
     private String signingConfigId;
@@ -22,14 +20,6 @@ public class DigitalSignResourceConfiguration implements ResourceConfiguration {
 
     public void setDigitalSignatureServerUrl(String digitalSignatureServerUrl) {
         this.digitalSignatureServerUrl = digitalSignatureServerUrl;
-    }
-
-    public String getDigitalSigningEndpoint() {
-        return digitalSigningEndpoint;
-    }
-
-    public void setDigitalSigningEndpoint(String digitalSigningEndpoint) {
-        this.digitalSigningEndpoint = digitalSigningEndpoint;
     }
 
     public boolean isUseSystemProxy() {

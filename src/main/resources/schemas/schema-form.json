@@ -6,13 +6,7 @@
       "title": "Digital Signature Server URL",
       "description": "URL du serveur de signature",
       "type" : "string",
-      "default": "https://authorization_server"
-    },
-    "digitalSigningEndpoint" : {
-      "title": "Signature endpoint",
-      "description": "Endpoint de signature (doit commencer par '/').",
-      "type" : "string",
-      "default": "/signatures/xmldsig"
+      "default": "https://signature_server"
     },
     "useSystemProxy" : {
       "title": "System proxy",
@@ -44,7 +38,6 @@
   },
   "required": [
     "digitalSignatureServerUrl",
-    "digitalSigningEndpoint",
     "signingConfigId"
   ]
 }

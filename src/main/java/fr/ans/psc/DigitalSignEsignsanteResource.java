@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +43,6 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 	private final Logger logger = LoggerFactory.getLogger(DigitalSignEsignsanteResource.class);
 
 	// Pattern reuse for duplicate slash removal
-	private static final Pattern DUPLICATE_SLASH_REMOVER = Pattern.compile("(?<!(http:|https:))[//]+");
-
 	private final int HTTP_PORT = 80;
 
 	private final int HTTPS_PORT = 443;
@@ -73,7 +69,7 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 
 	private String userAgent;
 
-	private String signingEndpointURI;
+	private String signingEndpointURI = "/signatures/xmldsig/";
 
 	@Override
 	public void doStart() throws Exception {
@@ -86,12 +82,6 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 		String dgsHost = serverUrl.getHost();
 		int dgsPort = serverUrl.getPort() != -1 ? serverUrl.getPort()
 				: configuration().isUseSSL() ? HTTPS_PORT : HTTP_PORT;
-
-		if (configuration().getDigitalSignatureServerUrl() != null) {
-			signingEndpointURI = DUPLICATE_SLASH_REMOVER.matcher(
-					configuration().getDigitalSignatureServerUrl() + "/" + configuration().getDigitalSigningEndpoint())
-					.replaceAll("/");
-		}
 
 		httpClientOptions = new HttpClientOptions().setDefaultHost(dgsHost).setDefaultPort(dgsPort).setIdleTimeout(60)
 				.setConnectTimeout(10000).setSsl(configuration().isUseSSL()).setVerifyHost(false).setTrustAll(true);
@@ -125,8 +115,7 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 		});
 	}
 
-	public void sign(byte[] docToSign, List<AdditionalParameter> additionalParameters,
-			Handler<DigitalSignResponse> responseHandler) {
+	public void sign(byte[] docToSign, Handler<DigitalSignResponse> responseHandler) {
 		HttpClient httpClient = httpClients.computeIfAbsent(Vertx.currentContext(),
 				__ -> vertx.createHttpClient(httpClientOptions));
 		WebClient webClient = WebClient.wrap(httpClient);
@@ -136,13 +125,11 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 				.attribute(SIGN_SECRET_KEY, configuration().getClientSecret())
 				.binaryFileUpload("file", "file", buffer, MediaType.MEDIA_APPLICATION_OCTET_STREAM.toMediaString());
 
-		if (additionalParameters != null && !additionalParameters.isEmpty()) {
-			additionalParameters.forEach(param -> form.attribute(param.getName(), param.getValue()));
-		}
-
-		webClient.post(signingEndpointURI).putHeader(CONTENT_TYPE_HEADER, MULTIPART_FORM_HEADER)
-				.putHeader(ACCEPT_HEADER, JSON_HEADER).putHeader(HttpHeaders.USER_AGENT.toString(), userAgent)
-				.sendMultipartForm(form).onFailure(failure -> {
+		webClient.post(configuration().getDigitalSignatureServerUrl() + signingEndpointURI)
+			.putHeader(CONTENT_TYPE_HEADER, MULTIPART_FORM_HEADER)
+			.putHeader(ACCEPT_HEADER, JSON_HEADER)
+			.putHeader(HttpHeaders.USER_AGENT.toString(), userAgent)
+			.sendMultipartForm(form).onFailure(failure -> {
 					logger.error("Could not send document do signature server", failure);
 					responseHandler.handle(new DigitalSignResponse(failure));
 				}).onSuccess(response -> {
@@ -162,7 +149,7 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
 	}
 
 	@Override
-	public DigitalSignResponse sign(byte[] docToSign, List<AdditionalParameter> additionalParameters) {
+	public DigitalSignResponse sign(byte[] docToSign) {
 		ApiClient client = new ApiClient();
 		client.setBasePath(configuration().getDigitalSignatureServerUrl());
 		SignaturesApiControllerApi api = new SignaturesApiControllerApi(client);
