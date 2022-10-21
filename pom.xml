@@ -124,7 +124,6 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
 		</dependency>
-
 		<!-- Test scope -->
 		<dependency>
 			<groupId>junit</groupId>
