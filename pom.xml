@@ -224,6 +224,27 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	<profiles>
+		<profile>
+			<id>github</id>
+			<repositories>
+				<repository>
+					<id>github-dgp</id>
+					<url>https://maven.pkg.github.com/prosanteconnect/digitalsign-gravitee-resource</url>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>github</id>
+					<url>https://maven.pkg.github.com/prosanteconnect/digitalsign-gravitee-resource-api</url>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+		</profile>
+	</profiles>
 	<distributionManagement>
 		<snapshotRepository>
 			<id>github</id>
@@ -236,5 +257,4 @@
 			<url>https://maven.pkg.github.com/prosanteconnect/digitalsign-gravitee-resource</url>
 		</repository>
 	</distributionManagement>
-
 </project>
