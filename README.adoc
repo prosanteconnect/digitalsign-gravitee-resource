@@ -25,7 +25,7 @@ You can configure the resource with the following options :
 ^.^|X
 |URL du serveur de signature
 ^.^|string
-^.^|https://authorization_server
+^.^|https://signature_server
 
 .^|useSystemProxy
 ^.^|
