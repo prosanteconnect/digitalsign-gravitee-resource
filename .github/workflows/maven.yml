@@ -23,6 +23,11 @@ jobs:
             "id": "github",
             "username": "${{ secrets.GTH_ACTOR }}",
             "password": "${{ secrets.GTH_TOKEN }}"
+          },
+          {
+            "id": "github-dgp",
+            "username": "${{ secrets.GTH_ACTOR }}",
+            "password": "${{ secrets.GTH_TOKEN }}"
           }]
     - uses: actions/checkout@v3
     - name: Set up JDK 11
