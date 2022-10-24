@@ -18,7 +18,7 @@ jobs:
       with:
         servers: |
           [{
-            "id": "gh",
+            "id": "github",
             "username": "prosanteconnect",
             "password": "${{ secrets.GTH_TOKEN }}"
           }]
