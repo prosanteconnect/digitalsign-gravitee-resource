@@ -18,8 +18,8 @@ jobs:
       with:
         servers: |
           [{
-            "id": "github",
-            "username": "${{ secrets.GTH_ACTOR }}",
+            "id": "gh",
+            "username": "prosanteconnect",
             "password": "${{ secrets.GTH_TOKEN }}"
           }]
     - uses: actions/checkout@v3
