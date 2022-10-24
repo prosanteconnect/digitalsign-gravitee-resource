@@ -13,6 +13,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    environment: psc-env
     steps:
     - uses: s4u/maven-settings-action@v2.7.0
       with:
