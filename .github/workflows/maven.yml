@@ -17,6 +17,7 @@ jobs:
     steps:
     - uses: s4u/maven-settings-action@v2.7.0
       with:
+        githubServer: false
         servers: |
           [{
             "id": "github",
