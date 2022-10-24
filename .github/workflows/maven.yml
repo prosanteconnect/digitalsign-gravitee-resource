@@ -19,7 +19,7 @@ jobs:
         servers: |
           [{
             "id": "github",
-            "username": "prosanteconnect",
+            "username": "${{ secrets.GTH_ACTOR }}",
             "password": "${{ secrets.GTH_TOKEN }}"
           }]
     - uses: actions/checkout@v3
