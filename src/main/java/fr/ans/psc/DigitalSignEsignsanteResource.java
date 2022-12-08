@@ -48,6 +48,8 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
     private final String ACCEPT_HEADER = "Accept";
 
     private final String JSON_HEADER = "application/json";
+    
+    private final String USER_AGENT_HEADER = "User-Agent";
 
     private ApplicationContext applicationContext;
 
@@ -138,6 +140,7 @@ public class DigitalSignEsignsanteResource extends DigitalSignResource<DigitalSi
         webClient.post(signingEndpointURI)
                 .putHeader(CONTENT_TYPE_HEADER, MULTIPART_FORM_HEADER)
                 .putHeader(ACCEPT_HEADER, JSON_HEADER)
+                .putHeader(USER_AGENT_HEADER, userAgent)
                 .sendMultipartForm(form)
                 .onFailure(failure -> {
                     logger.error("Could not send document do signature server", failure);
